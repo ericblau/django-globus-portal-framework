@@ -165,12 +165,14 @@ def get_search_filters(
             # Prefix was used to determine type and can be discarded. If we got
             # here, a format match was detected and we can split on first '.'
             _, filter_name = key.split('.', maxsplit=1)
-            filters.append({
-                'field_name': filter_name,
-                'type': (FILTER_TYPES.get(filter_type) or
-                         FILTER_TYPES.get(filter_match_default)),
-                'values': parse_filters(request.GET.getlist(key), filter_type)
-            })
+            values_list = parse_filters(request.GET.getlist(key), filter_type)
+            if not values_list == []:
+                filters.append({
+                    'field_name': filter_name,
+                    'type': (FILTER_TYPES.get(filter_type) or
+                             FILTER_TYPES.get(filter_match_default)),
+                    'values': values_list
+                })
     return filters
 
 
